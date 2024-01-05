@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Betting</title>
+    <style>
+        /* Styles remain unchanged */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Roulette Betting Game</h1>
+        <input type="text" id="betInput" placeholder="Enter bet e.g., Tobi odd 300">
+        <button onclick="placeBet()">Place Bet</button>
+        <button onclick="clearBets()">Clear Bets</button>
+        <input type="text" id="winInput" placeholder="Enter winning number e.g., 10">
+        <button onclick="calculateWinnings()">Declare Winner</button>
+        
+        <h2>Current Bets</h2>
+        <div id="currentBets" class="display-area"></div>
+
+        <h2>Winning Bets</h2>
+        <div id="winningBets" class="display-area"></div>
+
+        <h2>House Profit</h2>
+        <div id="houseProfit" class="display-area">0</div>
+    </div>
+
+    <script src="roulette.js"></script> <!-- Link to the JavaScript file -->
+</body>
+</html>
