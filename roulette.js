@@ -2,6 +2,7 @@ class RouletteBetting {
     constructor() {
         this.bets = [];
         this.houseProfit = 0;
+        this.players = [];
     }
 
     placeBet(name, option, betAmount) {
@@ -42,6 +43,7 @@ class RouletteBetting {
         this.bets.push({ name, numbers, betAmount });
         this.updateCurrentBetsDisplay();
     }
+
     calculateWinnings(winningNumber) {
         winningNumber = parseInt(winningNumber, 10);
 
@@ -71,7 +73,7 @@ class RouletteBetting {
     }
 
     getPayoutRatio(numNumbers) {
-        switch(numNumbers) {
+        switch (numNumbers) {
             case 1: return 35;
             case 2: return 17;
             case 3: return 11;
@@ -98,14 +100,30 @@ class RouletteBetting {
         const display = document.getElementById('houseProfit');
         display.textContent = this.houseProfit;
     }
+
+    resetTable() {
+        this.bets = [];
+        this.houseProfit = 0;
+        this.players = [];
+        this.updateCurrentBetsDisplay();
+        this.updateWinningBetsDisplay([]);
+        this.updateHouseProfitDisplay();
+        this.updatePlayersDisplay();
+    }
+
+    // Function to update players display
+    updatePlayersDisplay() {
+        const display = document.getElementById('players');
+        display.innerHTML = this.players.map(player => `${player.name}: $${player.balance}`).join('<br>');
+    }
 }
 
 const roulette = new RouletteBetting();
 
 function placeBet() {
     const betInputValue = document.getElementById('betInput').value;
-    const [name, numbers, betAmount] = betInputValue.split(' ');
-    roulette.placeBet(name, numbers, betAmount);
+    const [name, option, betAmount] = betInputValue.split(' ');
+    roulette.placeBet(name, option, betAmount);
     document.getElementById('betInput').value = ''; // Clear input field
 }
 
@@ -118,4 +136,8 @@ function calculateWinnings() {
 function clearBets() {
     roulette.bets = [];
     roulette.updateCurrentBetsDisplay();
+}
+
+function resetTable() {
+    roulette.resetTable();
 }
