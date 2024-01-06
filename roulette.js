@@ -151,10 +151,11 @@ class RouletteBetting {
 }
 
 const roulette = new RouletteBetting();
+const reBetInput = /(.*) (.*) (\d+)/;
 
 function placeBet() {
-    const betInputValue = document.getElementById('betInput').value;
-    const [name, numbers, betAmount] = betInputValue.split(' ');
+    const betInputValue = document.getElementById("betInput").value;
+    const [, name, numbers, betAmount] = reBetInput.exec(betInputValue);
     roulette.placeBet(name, numbers, betAmount);
     document.getElementById('betInput').value = ''; // Clear input field
 }
