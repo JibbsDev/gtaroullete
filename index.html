@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roulette Betting</title>
     <style>
+    
         body {
             font-family: Arial, sans-serif;
             background-color: #121212; /* Dark background */
@@ -63,17 +64,25 @@
             border-radius: 5px;
             color: #b3b3b3; /* Light grey text */
         }
+
+        .instructions {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Roulette Betting Game</h1>
-        <input type="text" id="betInput" placeholder="Enter bet e.g., lang odd 300">
+        <div class="instructions">
+            <p>Enter bets in the format: <strong>player_name bet_option bet_amount</strong>.</p>
+            <p>Bet options: red, black, green, 1st, 2nd, 3rd, odd, even, or direct numbers separated by commas.</p>
+        </div>
+        <input type="text" id="betInput" placeholder="Enter bet e.g., John red 300">
         <button onclick="placeBet()">Place Bet</button>
         <button onclick="clearBets()">Clear Bets</button>
         <input type="text" id="winInput" placeholder="Enter winning number e.g., 10">
         <button onclick="calculateWinnings()">Declare Winner</button>
-        
+
         <h2>Current Bets</h2>
         <div id="currentBets" class="display-area"></div>
 
@@ -82,6 +91,10 @@
 
         <h2>House Profit</h2>
         <div id="houseProfit" class="display-area">0</div>
+
+        <h2>Players</h2>
+        <div id="players" class="display-area"></div>
+        <button onclick="resetTable()">Reset Table</button>
     </div>
 
     <script src="roulette.js"></script> <!-- Link to the JavaScript file -->
