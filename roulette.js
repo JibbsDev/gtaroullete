@@ -3,7 +3,8 @@ class RouletteBetting {
     constructor() {
         this.houseBalance = 0;
         this.bets = [];
-        this.players = {};
+        this.playerWinningsLosses = 0;
+        this.players = {}; // Track players and their balances
     }
 
     setHouseBalance() {
@@ -41,6 +42,7 @@ class RouletteBetting {
                 numbers = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
                 break;
             default:
+                // Assuming direct number input
                 numbers = option.split(',').map(num => parseInt(num, 10));
                 break;
         }
@@ -50,15 +52,17 @@ class RouletteBetting {
         this.updateCurrentBetsDisplay();
 
         if (!this.players[name]) {
-            this.players[name] = { balance: 0, total: 0 };
+            this.players[name] = { balance: 0, total: 0, wagers: 0 };
         }
 
         this.players[name].balance -= betAmount; // Deduct from player's balance
+        this.players[name].wagers += 1; // Increment the number of wagers
     }
 
     calculateWinnings(winningNumber) {
         winningNumber = parseInt(winningNumber, 10);
 
+        // Adjust for the method that returns 37 instead of 0
         if (winningNumber === 37) {
             winningNumber = 0;
         }
@@ -70,32 +74,38 @@ class RouletteBetting {
             const { name, numbers, betAmount } = bet;
             if (numbers.includes(winningNumber)) {
                 const payoutRatio = this.getPayoutRatio(numbers.length);
-                const winnings = betAmount * payoutRatio;
+                const winnings = betAmount * payoutRatio + betAmount; // Include original bet
                 winners.push({ name, winnings });
                 totalPayout += winnings;
             }
+
+            for (const winner of winners) {
+                this.players[winner.name].balance += winner.winnings; // Add winnings to player's balance
+                this.players[winner.name].total += winner.winnings; // Update player's total winnings
+            }
+            this.playerWinningsLosses += totalPayout - this.totalBetAmount(); // Update aggregate player winnings/losses
         });
 
-        for (const winner of winners) {
-            this.players[winner.name].balance += winner.winnings;
-            this.players[winner.name].total += winner.winnings;
-        }
-
         this.houseBalance += (this.totalBetAmount() - totalPayout);
-        this.bets = [];
+        this.bets = []; // Clear current bets
         this.updateWinningBetsDisplay(winners);
         this.updateHouseBalanceDisplay();
-        this.updatePlayerBalancesDisplay();
-        this.updateCurrentBetsDisplay();
+        this.updatePlayerBalancesDisplay(); // Display updated player balances
+        this.updateCurrentBetsDisplay(); // Clear display of current bets
     }
 
     getPayoutRatio(numNumbers) {
         switch (numNumbers) {
-            case 1: return 35;
-            case 2: return 17;
-            case 3: return 11;
-            case 4: return 8;
-            default: return 0;
+            case 1:
+                return 35;
+            case 2:
+                return 17;
+            case 3:
+                return 11;
+            case 4:
+                return 8;
+            default:
+                return 0;
         }
     }
 
@@ -121,6 +131,7 @@ class RouletteBetting {
     resetTable() {
         this.houseBalance = 0;
         this.bets = [];
+        this.playerWinningsLosses = 0;
         this.players = {};
         this.updateDisplays();
     }
@@ -132,11 +143,11 @@ class RouletteBetting {
 
     updatePlayerBalancesDisplay() {
         const playerBalancesDisplay = document.getElementById('playerBalances');
-        playerBalancesDisplay.innerHTML = '';
+        playerBalancesDisplay.innerHTML = ''; // Clear previous content
         for (const playerName in this.players) {
             const playerBalance = this.players[playerName].balance;
-            const playerTotal = this.players[playerName].total;
-            playerBalancesDisplay.innerHTML += `${playerName}: $${playerBalance} (Total: $${playerTotal})<br>`;
+            const numWagers = this.players[playerName].wagers;
+            playerBalancesDisplay.innerHTML += `${playerName} has bet ${numWagers} times with a balance of $${playerBalance}<br>`;
         }
     }
 }
@@ -147,13 +158,13 @@ function placeBet() {
     const betInputValue = document.getElementById('betInput').value;
     const [name, numbers, betAmount] = betInputValue.split(/\s+/);
     roulette.placeBet(name, numbers, betAmount);
-    document.getElementById('betInput').value = '';
+    document.getElementById('betInput').value = ''; // Clear input field
 }
 
 function calculateWinnings() {
     const winningNumber = document.getElementById('winInput').value;
     roulette.calculateWinnings(winningNumber);
-    document.getElementById('winInput').value = '';
+    document.getElementById('winInput').value = ''; // Clear input field
 }
 
 function clearBets() {
@@ -165,6 +176,7 @@ function resetTable() {
     roulette.resetTable();
 }
 
+// Additional function to be called when needed
 function setHouseBalance() {
     roulette.setHouseBalance();
 }
