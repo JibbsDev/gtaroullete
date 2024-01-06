@@ -1,8 +1,17 @@
 class RouletteBetting {
+
     constructor() {
+        this.houseBalance = 0;
         this.bets = [];
         this.houseProfit = 0;
-        this.players = [];
+        this.playerWinningsLosses = 0;
+        this.players = {}; // Track players and their balances
+    }
+
+    setHouseBalance() {
+        const houseBalance = parseInt(document.getElementById('houseBalanceInput').value);
+        this.houseBalance = houseBalance;
+        this.updateDisplays();
     }
 
     placeBet(name, option, betAmount) {
@@ -42,6 +51,12 @@ class RouletteBetting {
         betAmount = parseInt(betAmount, 10);
         this.bets.push({ name, numbers, betAmount });
         this.updateCurrentBetsDisplay();
+
+        if (!this.players[name]) {
+            this.players[name] = { balance: 0 };
+        }
+
+        this.players[name].balance -= betAmount; // Deduct from player's balance
     }
 
     calculateWinnings(winningNumber) {
@@ -63,6 +78,11 @@ class RouletteBetting {
                 winners.push({ name, winnings });
                 totalPayout += winnings;
             }
+
+            for (const winner of winners) {
+                this.players[winner.name].balance += winner.winnings; // Add winnings to player's balance
+            }
+            this.playerWinningsLosses += totalPayout - this.totalBetAmount(); // Update aggregate player winnings/losses
         });
 
         this.houseProfit += (this.totalBetAmount() - totalPayout);
@@ -73,7 +93,7 @@ class RouletteBetting {
     }
 
     getPayoutRatio(numNumbers) {
-        switch (numNumbers) {
+        switch(numNumbers) {
             case 1: return 35;
             case 2: return 17;
             case 3: return 11;
@@ -102,29 +122,40 @@ class RouletteBetting {
     }
 
     resetTable() {
+        this.houseBalance = 0;
         this.bets = [];
         this.houseProfit = 0;
-        this.players = [];
-        this.updateCurrentBetsDisplay();
-        this.updateWinningBetsDisplay([]);
-        this.updateHouseProfitDisplay();
-        this.updatePlayersDisplay();
+        this.playerWinningsLosses = 0;
+        this.players = {};
+        this.updateDisplays();
     }
 
-    // Function to update players display
-    updatePlayersDisplay() {
-        const display = document.getElementById('players');
-        display.innerHTML = this.players.map(player => `${player.name}: $${player.balance}`).join('<br>');
+    updateDisplays() {
+        this.updatePlayerBalancesDisplay();
+        this.updateHouseBalanceDisplay();
+    }
+
+    updatePlayerBalancesDisplay() {
+        const playerBalancesDisplay = document.getElementById('playerBalances');
+        playerBalancesDisplay.innerHTML = ''; // Clear previous content
+        for (const playerName in this.players) {
+            const playerBalance = this.players[playerName].balance;
+            playerBalancesDisplay.innerHTML += `${playerName}: $${playerBalance}<br>`;
+        }
+    }
+
+    updateHouseBalanceDisplay() {
+        const houseBalanceDisplay = document.getElementById('houseBalanceDisplay');
+        houseBalanceDisplay.textContent = this.houseBalance;
     }
 }
-
 
 const roulette = new RouletteBetting();
 
 function placeBet() {
     const betInputValue = document.getElementById('betInput').value;
-    const [name, option, betAmount] = betInputValue.split(' ');
-    roulette.placeBet(name, option, betAmount);
+    const [name, numbers, betAmount] = betInputValue.split(' ');
+    roulette.placeBet(name, numbers, betAmount);
     document.getElementById('betInput').value = ''; // Clear input field
 }
 
@@ -143,14 +174,7 @@ function resetTable() {
     roulette.resetTable();
 }
 
-// Function to update players display
-function updatePlayersDisplay() {
-    const display = document.getElementById('players');
-    display.innerHTML = roulette.players.map(player => `${player.name}: $${player.balance}`).join('<br>');
-}
-
-// Update house profit display
-function updateHouseProfitDisplay() {
-    const display = document.getElementById('houseProfit');
-    display.textContent = roulette.houseProfit;
+// Additional function to be called when needed
+function setHouseBalance() {
+    roulette.setHouseBalance();
 }
