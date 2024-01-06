@@ -70,17 +70,16 @@ class RouletteBetting {
             const { name, numbers, betAmount } = bet;
             if (numbers.includes(winningNumber)) {
                 const payoutRatio = this.getPayoutRatio(numbers.length);
-                const winnings = betAmount * payoutRatio + betAmount;
+                const winnings = betAmount * payoutRatio;
                 winners.push({ name, winnings });
                 totalPayout += winnings;
             }
-
-            for (const winner of winners) {
-                this.players[winner.name].balance += winner.winnings;
-                this.players[winner.name].total += winner.winnings;
-            }
-            this.playerWinningsLosses += totalPayout - this.totalBetAmount();
         });
+
+        for (const winner of winners) {
+            this.players[winner.name].balance += winner.winnings;
+            this.players[winner.name].total += winner.winnings;
+        }
 
         this.houseBalance += (this.totalBetAmount() - totalPayout);
         this.bets = [];
