@@ -52,7 +52,7 @@ class RouletteBetting {
         this.updateCurrentBetsDisplay();
 
         if (!this.players[name]) {
-            this.players[name] = { balance: 0 };
+            this.players[name] = { balance: 0, total: 0 };
         }
 
         this.players[name].balance -= betAmount; // Deduct from player's balance
@@ -80,6 +80,7 @@ class RouletteBetting {
 
             for (const winner of winners) {
                 this.players[winner.name].balance += winner.winnings; // Add winnings to player's balance
+                this.players[winner.name].total += winner.winnings; // Update player's total winnings
             }
             this.playerWinningsLosses += totalPayout - this.totalBetAmount(); // Update aggregate player winnings/losses
         });
@@ -88,6 +89,7 @@ class RouletteBetting {
         this.bets = []; // Clear current bets
         this.updateWinningBetsDisplay(winners);
         this.updateHouseBalanceDisplay();
+        this.updatePlayerBalancesDisplay(); // Display updated player balances
         this.updateCurrentBetsDisplay(); // Clear display of current bets
     }
 
@@ -143,7 +145,8 @@ class RouletteBetting {
         playerBalancesDisplay.innerHTML = ''; // Clear previous content
         for (const playerName in this.players) {
             const playerBalance = this.players[playerName].balance;
-            playerBalancesDisplay.innerHTML += `${playerName}: $${playerBalance}<br>`;
+            const playerTotal = this.players[playerName].total;
+            playerBalancesDisplay.innerHTML += `${playerName}: $${playerBalance} (Total: $${playerTotal})<br>`;
         }
     }
 }
