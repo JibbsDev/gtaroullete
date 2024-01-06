@@ -42,7 +42,6 @@ class RouletteBetting {
         this.bets.push({ name, numbers, betAmount });
         this.updateCurrentBetsDisplay();
     }
-
     calculateWinnings(winningNumber) {
         winningNumber = parseInt(winningNumber, 10);
 
@@ -105,16 +104,9 @@ const roulette = new RouletteBetting();
 
 function placeBet() {
     const betInputValue = document.getElementById('betInput').value;
-
-    // Check if the input value is not empty
-    if (betInputValue.trim() !== '') {
-        const [name, option, betAmount] = betInputValue.split(' ');
-        roulette.placeBet(name, option, betAmount);
-        document.getElementById('betInput').value = ''; // Clear input field
-    } else {
-        // Handle empty input (optional)
-        console.error('Invalid input. Please enter a valid bet.');
-    }
+    const [name, numbers, betAmount] = betInputValue.split(' ');
+    roulette.placeBet(name, numbers, betAmount);
+    document.getElementById('betInput').value = ''; // Clear input field
 }
 
 function calculateWinnings() {
