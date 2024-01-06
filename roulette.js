@@ -153,6 +153,14 @@ class RouletteBetting {
 const roulette = new RouletteBetting();
 const reBetInput = /(.*) (.*) (\d+)/;
 
+// On enter keypress, run placeBet function
+document.getElementById("betInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      placeBet()
+    }
+});
+
 function placeBet() {
     const betInputValue = document.getElementById("betInput").value;
     const [, name, numbers, betAmount] = reBetInput.exec(betInputValue);
