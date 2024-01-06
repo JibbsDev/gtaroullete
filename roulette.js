@@ -3,7 +3,6 @@ class RouletteBetting {
     constructor() {
         this.houseBalance = 0;
         this.bets = [];
-        this.houseProfit = 0;
         this.playerWinningsLosses = 0;
         this.players = {}; // Track players and their balances
     }
@@ -85,20 +84,25 @@ class RouletteBetting {
             this.playerWinningsLosses += totalPayout - this.totalBetAmount(); // Update aggregate player winnings/losses
         });
 
-        this.houseProfit += (this.totalBetAmount() - totalPayout);
+        this.houseBalance += (this.totalBetAmount() - totalPayout);
         this.bets = []; // Clear current bets
         this.updateWinningBetsDisplay(winners);
-        this.updateHouseProfitDisplay();
+        this.updateHouseBalanceDisplay();
         this.updateCurrentBetsDisplay(); // Clear display of current bets
     }
 
     getPayoutRatio(numNumbers) {
-        switch(numNumbers) {
-            case 1: return 35;
-            case 2: return 17;
-            case 3: return 11;
-            case 4: return 8;
-            default: return 0;
+        switch (numNumbers) {
+            case 1:
+                return 35;
+            case 2:
+                return 17;
+            case 3:
+                return 11;
+            case 4:
+                return 8;
+            default:
+                return 0;
         }
     }
 
@@ -116,15 +120,14 @@ class RouletteBetting {
         display.innerHTML = winners.map(winner => `${winner.name} wins $${winner.winnings}`).join('<br>');
     }
 
-    updateHouseProfitDisplay() {
-        const display = document.getElementById('houseProfit');
-        display.textContent = this.houseProfit;
+    updateHouseBalanceDisplay() {
+        const houseBalanceDisplay = document.getElementById('houseBalanceDisplay');
+        houseBalanceDisplay.textContent = this.houseBalance;
     }
 
     resetTable() {
         this.houseBalance = 0;
         this.bets = [];
-        this.houseProfit = 0;
         this.playerWinningsLosses = 0;
         this.players = {};
         this.updateDisplays();
@@ -142,11 +145,6 @@ class RouletteBetting {
             const playerBalance = this.players[playerName].balance;
             playerBalancesDisplay.innerHTML += `${playerName}: $${playerBalance}<br>`;
         }
-    }
-
-    updateHouseBalanceDisplay() {
-        const houseBalanceDisplay = document.getElementById('houseBalanceDisplay');
-        houseBalanceDisplay.textContent = this.houseBalance;
     }
 }
 
