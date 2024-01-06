@@ -118,6 +118,7 @@ class RouletteBetting {
     }
 }
 
+
 const roulette = new RouletteBetting();
 
 function placeBet() {
@@ -140,4 +141,16 @@ function clearBets() {
 
 function resetTable() {
     roulette.resetTable();
+}
+
+// Function to update players display
+function updatePlayersDisplay() {
+    const display = document.getElementById('players');
+    display.innerHTML = roulette.players.map(player => `${player.name}: $${player.balance}`).join('<br>');
+}
+
+// Update house profit display
+function updateHouseProfitDisplay() {
+    const display = document.getElementById('houseProfit');
+    display.textContent = roulette.houseProfit;
 }
