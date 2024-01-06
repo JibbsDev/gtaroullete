@@ -97,12 +97,13 @@
 </head>
 
 <body>
-    <div class="instructions">
+    
+    <div class="container">
+        <div class="instructions">
         <p> Enter starting <strong>House Balance</strong></p>
         <p>Enter bets in the format: <strong>player_name bet_option bet_amount</strong>.</p>
         <p>Bet options: red, black, green, 1st, 2nd, 3rd, odd, even, or direct numbers separated by commas.</p>
     </div>
-    <div class="container">
         <h1>Roulette Betting Game</h1>
         <label for="houseBalanceInput">Set House Balance:</label>
         <input type="text" id="houseBalanceInput" placeholder="Enter house balance" onkeypress="return event.keyCode != 13 || setHouseBalance()">
