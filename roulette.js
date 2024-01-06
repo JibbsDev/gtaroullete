@@ -42,8 +42,7 @@ class RouletteBetting {
         this.bets.push({ name, numbers, betAmount });
         this.updateCurrentBetsDisplay();
     }
-
-  calculateWinnings(winningNumber) {
+    calculateWinnings(winningNumber) {
         winningNumber = parseInt(winningNumber, 10);
 
         // Adjust for the method that returns 37 instead of 0
